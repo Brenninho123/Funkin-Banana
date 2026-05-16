@@ -23,6 +23,8 @@ import lime.app.Application;
 import openfl.Assets;
 import polymod.Polymod;
 import funkin.backend.objects.Alphabet;
+import funkin.menus.mainmenu.MainMenuState;
+import funkin.menus.story.StoryMenuState;
 
 using StringTools;
 
