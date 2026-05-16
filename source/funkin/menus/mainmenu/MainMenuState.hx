@@ -15,6 +15,7 @@ import flixel.util.FlxColor;
 import lime.app.Application;
 import funkin.menus.title.TitleState;
 import funkin.menus.freeplay.FreeplayState;
+import funkin.menus.story.StoryMenuState;
 
 using StringTools;
 
