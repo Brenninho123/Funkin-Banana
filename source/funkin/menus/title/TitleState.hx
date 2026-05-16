@@ -25,7 +25,7 @@ import polymod.Polymod;
 import funkin.backend.objects.Alphabet;
 import funkin.menus.mainmenu.MainMenuState;
 import funkin.menus.story.StoryMenuState;
-import funkin.be.updates.OutdatedSubstate;
+import funkin.be.updates.OutdatedSubState;
 import funkin.backend.score.Highscore;
 
 using StringTools;
