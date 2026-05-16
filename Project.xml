@@ -35,7 +35,6 @@
 
 	<assets path="assets/fonts"   embed="true" />
 	<assets path="CHANGELOG.md"   rename="changelog.txt" />
-
 	<assets path="example_mods"   rename="mods" embed="false" />
 	<assets path="art/readme.txt" rename="do NOT readme.txt" />
 
@@ -47,9 +46,9 @@
 	<haxelib name="newgrounds" />
 	<haxelib name="faxe" if="switch" />
 
-	<haxedef name="webgl"                  if="html5" />
-	<haxedef name="FLX_NO_DEBUG"           unless="debug" />
-	<haxedef name="NAPE_RELEASE_BUILD"     unless="debug" />
+	<haxedef name="webgl"                    if="html5" />
+	<haxedef name="FLX_NO_DEBUG"             unless="debug" />
+	<haxedef name="NAPE_RELEASE_BUILD"       unless="debug" />
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
 
 	<haxeflag name="--dce full"  if="release" />
@@ -77,12 +76,25 @@
 		<architecture name="armv7" />
 		<android minSdkVersion="21" targetSdkVersion="34" />
 
+		<!-- Network & hardware -->
 		<permission android:name="android.permission.INTERNET" />
 		<permission android:name="android.permission.VIBRATE" />
+		<permission android:name="android.permission.WAKE_LOCK" />
+
+		<!-- Legacy storage (API < 29) -->
 		<permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 		<permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+		<!-- Scoped storage (API 29+) -->
 		<permission android:name="android.permission.READ_MEDIA_AUDIO" />
 		<permission android:name="android.permission.READ_MEDIA_IMAGES" />
+		<permission android:name="android.permission.READ_MEDIA_VIDEO" />
+
+		<!-- Full filesystem access (API 30+ / Android 11+) — required for mod loading -->
+		<permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
+		<!-- Required to request MANAGE_EXTERNAL_STORAGE at runtime -->
+		<permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
 		<haxedef name="MOBILE" />
 		<haxedef name="ANDROID" />
@@ -97,6 +109,12 @@
 			<string>This app does not use the microphone, but the API requires a declaration.</string>
 			<key>NSPhotoLibraryUsageDescription</key>
 			<string>Access required to save screenshots.</string>
+			<key>NSDocumentsFolderUsageDescription</key>
+			<string>Access required to load and save game data and mods.</string>
+			<key>UIFileSharingEnabled</key>
+			<true/>
+			<key>LSSupportsOpeningDocumentsInPlace</key>
+			<true/>
 		</plist>
 
 		<haxedef name="MOBILE" />
