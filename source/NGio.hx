@@ -4,12 +4,9 @@ import flixel.FlxG;
 import flixel.util.FlxSignal;
 import flixel.util.FlxTimer;
 import io.newgrounds.NG;
-import io.newgrounds.CallError;
-import io.newgrounds.LoginOutcome;
 import io.newgrounds.objects.Medal;
 import io.newgrounds.objects.Score;
 import io.newgrounds.objects.ScoreBoard;
-import io.newgrounds.objects.events.Outcome;
 import lime.app.Application;
 
 using StringTools;
@@ -22,10 +19,10 @@ class NGio
 
 	public static var scoreboardArray:Array<Score> = [];
 
-	public static var onLoginSignal:FlxSignal        = new FlxSignal();
-	public static var onMedalsReady:FlxSignal        = new FlxSignal();
-	public static var onScoresReady:FlxSignal        = new FlxSignal();
-	public static var onVersionFetched:FlxSignal     = new FlxSignal();
+	public static var onLoginSignal:FlxSignal    = new FlxSignal();
+	public static var onMedalsReady:FlxSignal    = new FlxSignal();
+	public static var onScoresReady:FlxSignal    = new FlxSignal();
+	public static var onVersionFetched:FlxSignal = new FlxSignal();
 
 	public static var onError:String->Void = null;
 
@@ -47,18 +44,16 @@ class NGio
 		new FlxTimer().start(2, function(_)
 		{
 			NG.core.calls.app.getCurrentVersion(GAME_VER)
-				.addStatusHandler(function(outcome:Outcome<CallError>)
+				.addStatusHandler(function(status)
 				{
-					switch (outcome)
+					try
 					{
-						case SUCCESS:
-							gotOnlineVer = true;
-							onVersionFetched.dispatch();
-
-						case FAIL(error):
-							if (onError != null)
-								onError('Failed to fetch online version: $error');
+						GAME_VER      = Std.string(status);
+						GAME_VER_NUMS = GAME_VER.split(" ")[0].trim();
+						gotOnlineVer  = true;
+						onVersionFetched.dispatch();
 					}
+					catch (_) {}
 				})
 				.send();
 		});
@@ -163,57 +158,27 @@ class NGio
 			NG.core.requestLogin(_onLogin);
 	}
 
-	private function _onLogin(outcome:LoginOutcome):Void
+	private function _onLogin():Void
 	{
-		switch (outcome)
-		{
-			case SUCCESS:
-				isLoggedIn = true;
+		isLoggedIn = true;
 
-				if (NG.core.sessionId != null)
-					FlxG.save.data.sessionId = NG.core.sessionId;
+		if (NG.core.sessionId != null)
+			FlxG.save.data.sessionId = NG.core.sessionId;
 
-				NG.core.requestMedals(_onMedalsFetched);
-				NG.core.requestScoreBoards(_onBoardsFetched);
+		NG.core.requestMedals(_onMedalsFetched);
+		NG.core.requestScoreBoards(_onBoardsFetched);
 
-				onLoginSignal.dispatch();
-
-			case FAIL(error):
-				if (onError != null)
-					onError('NG login failed: $error');
-		}
+		onLoginSignal.dispatch();
 	}
 
-	private function _onMedalsFetched(?outcome:Outcome<CallError>):Void
+	private function _onMedalsFetched():Void
 	{
-		if (outcome != null)
-			switch (outcome)
-			{
-				case FAIL(error):
-					if (onError != null)
-						onError('Failed to load medals: $error');
-					return;
-
-				case SUCCESS:
-			}
-
 		medalsLoaded = true;
 		onMedalsReady.dispatch();
 	}
 
-	private function _onBoardsFetched(?outcome:Outcome<CallError>):Void
+	private function _onBoardsFetched():Void
 	{
-		if (outcome != null)
-			switch (outcome)
-			{
-				case FAIL(error):
-					if (onError != null)
-						onError('Failed to load scoreboards: $error');
-					return;
-
-				case SUCCESS:
-			}
-
 		scoreboardsLoaded = true;
 		onScoresReady.dispatch();
 	}
