@@ -7,6 +7,9 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import funkin.menus.title.TitleState;
+import funkin.menus.mainmenu.MainMenuState;
+import funkin.menus.freeplay.FreeplayState;
+import funkin.menus.story.StoryMenuState;
 import funkin.gameplay.PlayState;
 
 class GameOverSubstate extends MusicBeatSubstate
