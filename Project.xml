@@ -43,7 +43,6 @@
 	<haxelib name="flixel-ui" />
 	<haxelib name="hscript" />
 	<haxelib name="polymod" />
-	<haxelib name="newgrounds" />
 	<haxelib name="faxe" if="switch" />
 
 	<haxedef name="webgl"                    if="html5" />
