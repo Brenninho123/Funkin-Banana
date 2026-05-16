@@ -4,11 +4,12 @@ import flixel.FlxG;
 import flixel.util.FlxSignal;
 import flixel.util.FlxTimer;
 import io.newgrounds.NG;
+import io.newgrounds.CallError;
+import io.newgrounds.LoginOutcome;
 import io.newgrounds.objects.Medal;
 import io.newgrounds.objects.Score;
 import io.newgrounds.objects.ScoreBoard;
-import io.newgrounds.objects.events.Response;
-import io.newgrounds.objects.events.Result.GetCurrentVersionResult;
+import io.newgrounds.objects.events.Outcome;
 import lime.app.Application;
 
 using StringTools;
@@ -21,22 +22,22 @@ class NGio
 
 	public static var scoreboardArray:Array<Score> = [];
 
-	public static var onLogin:FlxSignal        = new FlxSignal();
-	public static var onMedalsReady:FlxSignal  = new FlxSignal();
-	public static var onScoresReady:FlxSignal  = new FlxSignal();
-	public static var onVersionFetched:FlxSignal = new FlxSignal();
+	public static var onLoginSignal:FlxSignal        = new FlxSignal();
+	public static var onMedalsReady:FlxSignal        = new FlxSignal();
+	public static var onScoresReady:FlxSignal        = new FlxSignal();
+	public static var onVersionFetched:FlxSignal     = new FlxSignal();
 
 	public static var onError:String->Void = null;
 
-	public static var gameVersion:String     = "";
-	public static var gameVersionNums:String = "";
-	public static var gotOnlineVersion:Bool  = false;
+	public static var GAME_VER:String      = "";
+	public static var GAME_VER_NUMS:String = "";
+	public static var gotOnlineVer:Bool    = false;
 
 	private static var _instance:NGio = null;
 
 	public static function noLogin(api:String):Void
 	{
-		gameVersion = "v" + Application.current.meta.get("version");
+		GAME_VER = "v" + Application.current.meta.get("version");
 
 		if (api == null || api.length == 0)
 			return;
@@ -45,19 +46,18 @@ class NGio
 
 		new FlxTimer().start(2, function(_)
 		{
-			NG.core.calls.app.getCurrentVersion(gameVersion)
-				.addDataHandler(function(response:Response<GetCurrentVersionResult>)
+			NG.core.calls.app.getCurrentVersion(GAME_VER)
+				.addStatusHandler(function(outcome:Outcome<CallError>)
 				{
-					if (response.success)
+					switch (outcome)
 					{
-						gameVersion     = response.result.data.currentVersion;
-						gameVersionNums = gameVersion.split(" ")[0].trim();
-						gotOnlineVersion = true;
-						onVersionFetched.dispatch();
-					}
-					else if (onError != null)
-					{
-						onError("Failed to fetch online version.");
+						case SUCCESS:
+							gotOnlineVer = true;
+							onVersionFetched.dispatch();
+
+						case FAIL(error):
+							if (onError != null)
+								onError('Failed to fetch online version: $error');
 					}
 				})
 				.send();
@@ -151,7 +151,7 @@ class NGio
 
 	private function new(api:String, encKey:String, ?sessionId:String)
 	{
-		gameVersion = "v" + Application.current.meta.get("version");
+		GAME_VER = "v" + Application.current.meta.get("version");
 
 		NG.createAndCheckSession(api, sessionId);
 		NG.core.verbose = false;
@@ -163,27 +163,57 @@ class NGio
 			NG.core.requestLogin(_onLogin);
 	}
 
-	private function _onLogin():Void
+	private function _onLogin(outcome:LoginOutcome):Void
 	{
-		isLoggedIn = true;
+		switch (outcome)
+		{
+			case SUCCESS:
+				isLoggedIn = true;
 
-		if (NG.core.sessionId != null)
-			FlxG.save.data.sessionId = NG.core.sessionId;
+				if (NG.core.sessionId != null)
+					FlxG.save.data.sessionId = NG.core.sessionId;
 
-		NG.core.requestMedals(_onMedalsFetched);
-		NG.core.requestScoreBoards(_onBoardsFetched);
+				NG.core.requestMedals(_onMedalsFetched);
+				NG.core.requestScoreBoards(_onBoardsFetched);
 
-		onLogin.dispatch();
+				onLoginSignal.dispatch();
+
+			case FAIL(error):
+				if (onError != null)
+					onError('NG login failed: $error');
+		}
 	}
 
-	private function _onMedalsFetched():Void
+	private function _onMedalsFetched(?outcome:Outcome<CallError>):Void
 	{
+		if (outcome != null)
+			switch (outcome)
+			{
+				case FAIL(error):
+					if (onError != null)
+						onError('Failed to load medals: $error');
+					return;
+
+				case SUCCESS:
+			}
+
 		medalsLoaded = true;
 		onMedalsReady.dispatch();
 	}
 
-	private function _onBoardsFetched():Void
+	private function _onBoardsFetched(?outcome:Outcome<CallError>):Void
 	{
+		if (outcome != null)
+			switch (outcome)
+			{
+				case FAIL(error):
+					if (onError != null)
+						onError('Failed to load scoreboards: $error');
+					return;
+
+				case SUCCESS:
+			}
+
 		scoreboardsLoaded = true;
 		onScoresReady.dispatch();
 	}
