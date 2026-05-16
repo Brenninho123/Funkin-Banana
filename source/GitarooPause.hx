@@ -3,6 +3,8 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
+import funkin.menus.mainmenu.MainMenuState;
+import funkin.gameplay.PlayState;
 
 class GitarooPause extends MusicBeatState
 {
