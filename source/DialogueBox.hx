@@ -10,6 +10,8 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import funkin.backend.objects.Alphabet;
+import funkin.gameplay.PlayState;
+import funkin.menus.title.TitleState;
 
 using StringTools;
 
