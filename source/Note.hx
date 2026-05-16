@@ -5,6 +5,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import polymod.format.ParseRules.TargetSignatureElement;
+import funkin.gameplay.PlayState;
 
 using StringTools;
 
