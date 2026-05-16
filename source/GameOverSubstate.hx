@@ -6,6 +6,8 @@ import flixel.FlxSubState;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import funkin.menus.title.TitleState;
+import funkin.gameplay.PlayState;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
