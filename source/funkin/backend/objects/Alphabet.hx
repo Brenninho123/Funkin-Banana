@@ -250,14 +250,14 @@ class Alphabet extends FlxSpriteGroup
 
 			loopNum++;
 			tmr.time = FlxG.random.float(0.04, 0.09);
-		}, _splitWords.length);
 
-		_typingTimer.completionCallback = function(_)
-		{
-			_applyAlignment();
-			if (onTypingComplete != null)
-				onTypingComplete();
-		};
+			if (loopNum >= _splitWords.length)
+			{
+				_applyAlignment();
+				if (onTypingComplete != null)
+					onTypingComplete();
+			}
+		}, _splitWords.length);
 	}
 
 	private function _applyCharacter(letter:AlphaCharacter, ch:String, typed:Bool = false):Void
