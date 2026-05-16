@@ -8,7 +8,10 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import funkin.backend.objects.Alphabet;
 import funkin.menus.title.TitleState;
+import funkin.menus.mainmenu.MainMenuState;
+import funkin.menus.story.StoryMenuState;
 import funkin.gameplay.PlayState;
+import funkin.backend.score.Highscore;
 
 using StringTools;
 
