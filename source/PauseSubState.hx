@@ -12,6 +12,7 @@ import flixel.util.FlxColor;
 import funkin.backend.objects.Alphabet;
 import funkin.gameplay.PlayState;
 import funkin.menus.mainmenu.MainMenuState;
+import funkin.menus.title.TitleState;
 
 class PauseSubState extends MusicBeatSubstate
 {
