@@ -22,6 +22,7 @@ import flixel.util.FlxTimer;
 import lime.app.Application;
 import openfl.Assets;
 import polymod.Polymod;
+import funkin.backend.objects.Alphabet;
 
 using StringTools;
 
