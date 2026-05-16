@@ -158,28 +158,52 @@ class NGio
 			NG.core.requestLogin(_onLogin);
 	}
 
-	private function _onLogin():Void
+	private function _onLogin(?outcome:io.newgrounds.LoginOutcome):Void
 	{
-		isLoggedIn = true;
+		switch (outcome)
+		{
+			case SUCCESS | null:
+				isLoggedIn = true;
 
-		if (NG.core.sessionId != null)
-			FlxG.save.data.sessionId = NG.core.sessionId;
+				if (NG.core.sessionId != null)
+					FlxG.save.data.sessionId = NG.core.sessionId;
 
-		NG.core.requestMedals(_onMedalsFetched);
-		NG.core.requestScoreBoards(_onBoardsFetched);
+				NG.core.requestMedals(_onMedalsFetched);
+				NG.core.requestScoreBoards(_onBoardsFetched);
 
-		onLoginSignal.dispatch();
+				onLoginSignal.dispatch();
+
+			case FAIL(error):
+				if (onError != null)
+					onError('NG login failed: $error');
+		}
 	}
 
-	private function _onMedalsFetched():Void
+	private function _onMedalsFetched(?outcome:io.newgrounds.objects.events.Outcome<io.newgrounds.CallError>):Void
 	{
-		medalsLoaded = true;
-		onMedalsReady.dispatch();
+		switch (outcome)
+		{
+			case FAIL(error):
+				if (onError != null)
+					onError('Failed to load medals: $error');
+
+			case SUCCESS | null:
+				medalsLoaded = true;
+				onMedalsReady.dispatch();
+		}
 	}
 
-	private function _onBoardsFetched():Void
+	private function _onBoardsFetched(?outcome:io.newgrounds.objects.events.Outcome<io.newgrounds.CallError>):Void
 	{
-		scoreboardsLoaded = true;
-		onScoresReady.dispatch();
+		switch (outcome)
+		{
+			case FAIL(error):
+				if (onError != null)
+					onError('Failed to load scoreboards: $error');
+
+			case SUCCESS | null:
+				scoreboardsLoaded = true;
+				onScoresReady.dispatch();
+		}
 	}
 }
