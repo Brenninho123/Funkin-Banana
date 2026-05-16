@@ -29,9 +29,17 @@ jobs:
           haxelib install flixel-addons --quiet
           haxelib install flixel-ui     --quiet
           haxelib install hscript       --quiet
-          haxelib install polymod       --quiet
           haxelib install newgrounds    --quiet
-          haxelib run lime setup        -quiet
+          haxelib install polymod       --quiet
+
+          haxelib run lime setup -quiet
+
+      - name: Fix jsonpath/thx.core incompatibility
+        # jsonpath 1.1.0 calls thx.Arrays.containsExact which doesn't exist
+        # in thx.core 0.44.0. Downgrade jsonpath to 1.0.0 which is compatible.
+        run: |
+          haxelib install jsonpath 1.0.0 --quiet
+          haxelib set jsonpath 1.0.0
 
       - name: Build (release)
         run: haxelib run lime build windows -release
@@ -42,4 +50,3 @@ jobs:
           name: FunkinBanana-Windows
           path: export/release/windows/bin/
           if-no-files-found: error
-          
