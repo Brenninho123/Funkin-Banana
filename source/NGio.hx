@@ -153,12 +153,12 @@ class NGio
 		NG.core.initEncryption(encKey);
 
 		if (NG.core.attemptingLogin)
-			NG.core.onLogin.add(_onLogin);
+			NG.core.onLogin.add(function(_) _onLogin());
 		else
 			NG.core.requestLogin(_onLogin);
 	}
 
-	private function _onLogin(outcome:Dynamic):Void
+	private function _onLogin():Void
 	{
 		isLoggedIn = true;
 
@@ -171,13 +171,13 @@ class NGio
 		onLoginSignal.dispatch();
 	}
 
-	private function _onMedalsFetched(outcome:Dynamic):Void
+	private function _onMedalsFetched():Void
 	{
 		medalsLoaded = true;
 		onMedalsReady.dispatch();
 	}
 
-	private function _onBoardsFetched(outcome:Dynamic):Void
+	private function _onBoardsFetched():Void
 	{
 		scoreboardsLoaded = true;
 		onScoresReady.dispatch();
