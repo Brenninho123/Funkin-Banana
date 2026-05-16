@@ -3,7 +3,7 @@
 
 	<app title="Friday Night Funkin' Banana Engine" file="FunkinBanana"
 		packageName="me.funkin.banana" package="me.funkin.banana"
-		main="Main" version="0.2.7.1" company="Brenninho" />
+		main="funkin.backend.main.Main" version="0.2.7.1" company="Brenninho" />
 
 	<app title="FNF: Banana Engine" if="mobile" />
 	<app preloader="flixel.system.FlxPreloader" />
