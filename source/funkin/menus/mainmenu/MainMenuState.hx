@@ -16,6 +16,7 @@ import lime.app.Application;
 import funkin.menus.title.TitleState;
 import funkin.menus.freeplay.FreeplayState;
 import funkin.menus.story.StoryMenuState;
+import funkin.menus.options.OptionsMenu;
 
 using StringTools;
 
