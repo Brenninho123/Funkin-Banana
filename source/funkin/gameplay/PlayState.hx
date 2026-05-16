@@ -39,6 +39,9 @@ import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
 import funkin.menus.title.TitleState;
+import funkin.menus.story.StoryMenuState;
+import funkin.menus.freeplay.FreeplayState;
+import funkin.backend.score.Highscore;
 
 using StringTools;
 
